@@ -1,11 +1,11 @@
 'use client'
 
 import { useState, useRef, ChangeEvent, DragEvent } from 'react'
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/input"
+import { Button } from "../components/ui/button"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../components/ui/card"
+import { Input } from "../components/ui/input"
 import { AlertCircle, Upload, Check, ThumbsUp, ThumbsDown, Camera } from 'lucide-react'
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Alert, AlertDescription, AlertTitle } from "../components/ui/alert"
 
 export function PhotoUploaderWizardComponent() {
   const [step, setStep] = useState(1)
