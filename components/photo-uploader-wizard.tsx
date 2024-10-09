@@ -13,7 +13,7 @@ export function PhotoUploaderWizardComponent() {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [uploading, setUploading] = useState(false)
-  const [uploadComplete, setUploadComplete] = useState(false)
+  const [, setUploadComplete] = useState(false)
   const [photoQuality, setPhotoQuality] = useState<'good' | 'bad' | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const cameraInputRef = useRef<HTMLInputElement>(null)
