@@ -73,7 +73,7 @@ export function PhotoUploaderWizardComponent() {
     switch (step) {
       case 1:
         return (
-          <div className="space-y-4">
+            <div className="space-y-8">
             <div className="flex justify-center space-x-4">
               <button
                 onClick={() => setPhotoQuality('good')}
@@ -104,24 +104,15 @@ export function PhotoUploaderWizardComponent() {
                 className="flex items-center justify-center space-x-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-300"
               >
                 <Upload className="w-5 h-5" />
-                <span>Upload Photo</span>
+                <span>בא לי לבחור</span>
               </button>
               <button
                 onClick={() => cameraInputRef.current?.click()}
                 className="flex items-center justify-center space-x-2 px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors duration-300"
               >
                 <Camera className="w-5 h-5" />
-                <span>Take Photo</span>
+                <span>בא לי לצלם</span>
               </button>
-            </div>
-            <div
-              className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer transition-all duration-300 ease-in-out hover:border-gray-400 hover:bg-gray-50"
-              onClick={() => fileInputRef.current?.click()}
-              onDragOver={handleDragOver}
-              onDrop={handleDrop}
-            >
-              <Upload className="mx-auto h-12 w-12 text-gray-400" />
-              <p className="mt-2 text-sm text-gray-600">Drag and drop your photo here, or click to select a file</p>
             </div>
             <Input
               type="file"
@@ -151,7 +142,7 @@ export function PhotoUploaderWizardComponent() {
             <div className="flex justify-between items-center">
               <p className="text-sm text-gray-600">{file?.name}</p>
               <Button variant="outline" size="sm" onClick={resetWizard}>
-                Change Photo
+                יצאתי טוב מידי
               </Button>
             </div>
             <p className="text-sm text-gray-600">
@@ -206,10 +197,9 @@ export function PhotoUploaderWizardComponent() {
           }
         }
       `}</style>
-      <Card className="w-[400px] shadow-xl">
+      <Card className="w-[300px] shadow-xl">
         <CardHeader>
-          <CardTitle>Photo Uploader</CardTitle>
-          <CardDescription>Upload your photo in just a few steps</CardDescription>
+          <CardTitle>איך אני היום</CardTitle>
         </CardHeader>
         <CardContent>
           {error && (
