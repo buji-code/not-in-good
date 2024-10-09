@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, ChangeEvent } from 'react'
+import { useState, useRef, ChangeEvent, useEffect } from 'react'
 import { Button } from "../components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../components/ui/card"
 import { Input } from "../components/ui/input"
@@ -10,6 +10,7 @@ import { Alert, AlertDescription, AlertTitle } from "../components/ui/alert"
 export function PhotoUploaderWizardComponent() {
   const [step, setStep] = useState(1)
   const [file, setFile] = useState<File | null>(null)
+  const [titleText, setTitleText] = useState('איך אני היום')
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [uploading, setUploading] = useState(false)
@@ -17,6 +18,15 @@ export function PhotoUploaderWizardComponent() {
   const [photoQuality, setPhotoQuality] = useState<'good' | 'bad' | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const cameraInputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    const newTitleText = photoQuality === 'good' ? 'אני בטוב' : 'אני לא בטוב'
+    if (step >= 2) {
+      setTitleText(newTitleText)
+    } else {
+      setTitleText('איך אני היום')
+    }
+  }, [photoQuality, step])
 
   const handleFileSelect = (selectedFile: File) => {
     if (!selectedFile.type.startsWith('image/')) {
@@ -60,7 +70,7 @@ export function PhotoUploaderWizardComponent() {
     switch (step) {
       case 1:
         return (
-            <div className="space-y-8">
+          <div className="space-y-8">
             <div className="flex justify-center space-x-4">
               <button
                 onClick={() => setPhotoQuality('good')}
@@ -85,20 +95,22 @@ export function PhotoUploaderWizardComponent() {
                 <span>לא בטוב</span>
               </button>
             </div>
-            <div className="flex justify-center space-x-4">
-              <button
-                onClick={() => fileInputRef.current?.click()}
-                className="flex items-center justify-center space-x-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-300"
-              >
-                <Upload className="w-5 h-5" />
-              </button>
-              <button
-                onClick={() => cameraInputRef.current?.click()}
-                className="flex items-center justify-center space-x-2 px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors duration-300"
-              >
-                <Camera className="w-5 h-5" />
-              </button>
-            </div>
+            {photoQuality && (
+              <div className="flex justify-center space-x-4 animate-fade-in">
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="flex items-center justify-center space-x-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-300"
+                >
+                  <Upload className="w-5 h-5" />
+                </button>
+                <button
+                  onClick={() => cameraInputRef.current?.click()}
+                  className="flex items-center justify-center space-x-2 px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors duration-300"
+                >
+                  <Camera className="w-5 h-5" />
+                </button>
+              </div>
+            )}
             <Input
               type="file"
               ref={fileInputRef}
@@ -120,19 +132,18 @@ export function PhotoUploaderWizardComponent() {
         return (
           <div className="space-y-4">
             {previewUrl && (
-              <div className="relative aspect-video">
+              <div className="relative w-full h-full">
                 <img src={previewUrl} alt="Preview" className="rounded-lg object-cover w-full h-full" />
               </div>
             )}
             <div className="flex justify-between items-center">
-              <p className="text-sm text-gray-600">{file?.name}</p>
-              <Button variant="outline" size="sm" onClick={resetWizard}>
+              <Button variant="outline" onClick={handleUpload} disabled={uploading || !photoQuality}>
+                {uploading ? 'מעלה...' : 'מושלם'}
+              </Button>
+              <Button variant="destructive" onClick={resetWizard}>
                 יצאתי טוב מידי
               </Button>
             </div>
-            <p className="text-sm text-gray-600">
-              Photo Quality: <span className="font-semibold capitalize">{photoQuality}</span>
-            </p>
           </div>
         )
       case 3:
@@ -141,11 +152,8 @@ export function PhotoUploaderWizardComponent() {
             <div className="flex items-center justify-center w-16 h-16 mx-auto bg-green-100 rounded-full">
               <Check className="h-8 w-8 text-green-600" />
             </div>
-            <h3 className="text-lg font-semibold">Upload Complete!</h3>
+            <h3 className="text-lg font-semibold">יום מושלם</h3>
             <p className="text-sm text-gray-600">Your photo has been successfully uploaded.</p>
-            <p className="text-sm text-gray-600">
-              Photo Quality: <span className="font-semibold capitalize">{photoQuality}</span>
-            </p>
           </div>
         )
       default:
@@ -181,10 +189,21 @@ export function PhotoUploaderWizardComponent() {
             background-position: 0% 50%;
           }
         }
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+        .animate-fade-in {
+          animation: fadeIn 0.5s ease-in-out;
+        }
       `}</style>
       <Card className="w-[300px] shadow-xl">
         <CardHeader>
-          <CardTitle>איך אני היום</CardTitle>
+          <CardTitle>{titleText}</CardTitle>
         </CardHeader>
         <CardContent>
           {error && (
@@ -197,16 +216,6 @@ export function PhotoUploaderWizardComponent() {
           {renderStep()}
         </CardContent>
         <CardFooter className="flex justify-between">
-          {step === 2 && (
-            <Button onClick={handleUpload} disabled={uploading || !photoQuality}>
-              {uploading ? 'Uploading...' : 'Upload Photo'}
-            </Button>
-          )}
-          {step === 3 && (
-            <Button onClick={resetWizard}>
-              Upload Another Photo
-            </Button>
-          )}
         </CardFooter>
       </Card>
     </div>
